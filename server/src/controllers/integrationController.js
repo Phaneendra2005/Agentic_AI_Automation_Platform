@@ -64,10 +64,11 @@ async function oauthCallback(req, res) {
 
   // Validate the state token and recover the user id that initiated the flow.
   let userId;
+  let targetProvider;
   try {
     const decoded = jwt.verify(state, JWT_SECRET);
-    if (decoded.provider !== provider) throw new Error('provider mismatch');
     userId = decoded.userId;
+    targetProvider = decoded.provider;
   } catch {
     return res.redirect(
       `${CLIENT_URL}/integrations?error=${encodeURIComponent('Invalid or expired OAuth state — please try connecting again')}`
@@ -75,17 +76,17 @@ async function oauthCallback(req, res) {
   }
 
   try {
-    const integration = PROVIDERS[provider];
+    const integration = PROVIDERS[targetProvider];
     if (!integration) {
-      return res.redirect(`${CLIENT_URL}/integrations?error=${encodeURIComponent(`Unknown provider: ${provider}`)}`);
+      return res.redirect(`${CLIENT_URL}/integrations?error=${encodeURIComponent(`Unknown provider: ${targetProvider}`)}`);
     }
 
     const tokens = await integration.exchangeCode(code);
-    await integrationService.saveTokens(userId, provider, tokens);
+    await integrationService.saveTokens(userId, targetProvider, tokens);
     const integrations = await settingsService.getIntegrationStatus(userId);
-    emitSettingsEvent(userId, 'integration.connected', { provider, integrations });
+    emitSettingsEvent(userId, 'integration.connected', { provider: targetProvider, integrations });
 
-    res.redirect(`${CLIENT_URL}/integrations?connected=${encodeURIComponent(provider)}`);
+    res.redirect(`${CLIENT_URL}/integrations?connected=${encodeURIComponent(targetProvider)}`);
   } catch (err) {
     console.error('[OAuth callback]', err.message);
     res.redirect(`${CLIENT_URL}/integrations?error=${encodeURIComponent(err.message)}`);
