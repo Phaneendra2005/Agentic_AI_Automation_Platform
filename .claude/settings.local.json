@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(netstat -ano)",
+      "PowerShell(Get-Process -Id 15424 -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Process -Id 18288 -ErrorAction SilentlyContinue)",
+      "PowerShell(Invoke-RestMethod -Uri \"http://localhost:5000/api/health\" -Method GET)"
+    ]
+  }
+}
