@@ -315,9 +315,9 @@ B.Tech Computer Science & Engineering (Cyber Security)
 
 Full Stack Developer | AI Engineer
 
-GitHub: https://github.com/yourusername
+GitHub: [https://github.com/yourusername](https://github.com/Phaneendra2005)
 
-LinkedIn: https://linkedin.com/in/yourprofile
+LinkedIn: https://www.linkedin.com/in/phaneendra-kanduri/
 
 ---
 
